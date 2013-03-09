@@ -47,7 +47,7 @@ function ddPopover(container, config) {
   //show / hide menu on trigger click  (toggle dd popover) (evt delegation)
   //FIXME: figure out delegation?
   events.bind(trigger_node, 'click', function(e){
-    e.preventDefault(); //prevent following the link 
+    preventDef(e); //prevent following the link 
     
     //if class is present, show it, else hide it
     if ( target_node.className.match(toggleClass) ) {
@@ -68,7 +68,7 @@ function ddPopover(container, config) {
 
   //stop click on dropdown to close the menu 
   events.bind(target_node, 'click', function(e){
-    e.stopPropagation();
+    stopProp(e);
   });
   
   //if a close trigger is passed in, set delegate for it.
