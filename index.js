@@ -23,8 +23,10 @@
 var getEl = require("qwery");
 var events = require("event");  
 var parseDataControls = require("data-control-parser");
+var stopProp = require('stop'); //x-browser stopPropogation 
+var preventDef = require('prevent'); //x-browser preventDefault 
 
-//TODO: pass in context and scope for all of these!
+//TODO: pull in yields/stop, yields/prevent (for x-browser both of those)
 
 //instantiate a new popover instance
 function ddPopover(container, config) {
@@ -32,10 +34,10 @@ function ddPopover(container, config) {
   var context = container_node;
 
   var trigger = config.trigger || ".trigger";
-  var trigger_node = getEl(trigger, context);
+  var trigger_node = getEl(trigger, context)[0];
 
   var target = config.target || ".target";
-  var target_node = getEl(target, context);
+  var target_node = getEl(target, context)[0];
 
   var toggleClass = config.toggleClass || "visible";
 
@@ -43,39 +45,36 @@ function ddPopover(container, config) {
 
 
   //show / hide menu on trigger click  (toggle dd popover) (evt delegation)
-  container_node.on('click', trigger, function(e) {
+  //FIXME: figure out delegation?
+  events.bind(trigger_node, 'click', function(e){
     e.preventDefault(); //prevent following the link 
     
     //if class is present, show it, else hide it
-    if ( target_node.hasClass(toggleClass) ) {
+    if ( target_node.className.match(toggleClass) ) {
       closeMenu();
 
     } else {
-      toggleMenu(true, target_node, toggleClass, config.openEvent); //open menu
+      showMenu(target_node, toggleClass);
+      //toggleMenu(true, target_node, toggleClass, config.openEvent); //open menu
       
       setTimeout(function(){ 
-        $("html").on("click", closeMenu); //add global click listener to close menu
-        $(document).on("keyup", closeMenuOnEsc); //add global esc key listener to close menu  
+        events.bind(getEl('html')[0], "click", closeMenu); //add global click listener to close menu
+        events.bind(document, "keyup", closeMenuOnEsc); //add global esc key listener to close menu  
       }, 50);
 
     }
   });
-
-  //hide menu on escape keystroke
   
 
-    
   //stop click on dropdown to close the menu 
-  container_node.on('click', target, function(e){
+  events.bind(target_node, 'click', function(e){
     e.stopPropagation();
   });
   
   //if a close trigger is passed in, set delegate for it.
   if (closeTrigger) {
     //if there's a close trigger, add listener to close
-    container_node.on('click', closeTrigger, function(){
-      closeMenu();
-    }); 
+    events.bind(getEl(closeTrigger, context)[0], "click", closeMenu);
   } 
   
   //close on escape
@@ -87,18 +86,33 @@ function ddPopover(container, config) {
 
   //close convenience method
   function closeMenu() {
-    toggleMenu(false, target_node, toggleClass, config.closeEvent);  //force close
-    $("html").off("click", closeMenu); //remove global close click listener
-    $(document).off("keyup", closeMenuOnEsc); //remove global esc key listener
+    hideMenu(target_node, toggleClass);
+    //if open event defined, fire it
+    //FIXME: Q: How are we going to fire custom events without jquery?
+    // if (eventToFire) {
+    //   $(el).trigger(eventToFire); 
+    // }
+
+    events.unbind(getEl('html')[0], "click", closeMenu); //remove global close click listener
+    events.unbind(document, "keyup", closeMenuOnEsc); //remove global esc key listener
   }
 
-  function toggleMenu(switchBool, el, className, eventToFire) {
-    $(el).toggleClass(className, switchBool); //switch = if true/false to add/remove class
-    //if open event defined, fire it
-    if (eventToFire) {
-      $(el).trigger(eventToFire); 
-    }
+  function hideMenu(el, className) {
+    el.className = el.className.replace(className, ""); //remove className
+
   }
+
+  function showMenu(el, className) {
+    el.className += " " + className; //add className
+
+    //if open event defined, fire it
+    //FIXME: How are we going to fire the custom events without jquery? Is that possible?
+    // if (eventToFire) {
+    //   $(el).trigger(eventToFire); 
+    // }
+  }
+
+  
 } //ddPopover()
 
 
@@ -108,7 +122,6 @@ function ddPopover(container, config) {
 function getPopoverNodes(query) {
   var popover_query = query || "[data-control=ddPopover]";
   var popovers = getEl(popover_query);
-  console.log(popovers);
   return popovers;
 }
 

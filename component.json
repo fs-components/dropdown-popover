@@ -7,8 +7,10 @@
   "dependencies": {
     "jamischarles/qwery": "*",
     "component/event": "*",
-    "fs-components/data-control-parser": "*"
-    },
+    "fs-components/data-control-parser": "*",
+    "yields/prevent": "*",
+    "yields/stop": "*"
+  },
   "development": {},
   "license": "MIT",
   "scripts": [
