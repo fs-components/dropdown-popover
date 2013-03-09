@@ -1,0 +1,17 @@
+{
+  "name": "dropdown-popover",
+  "repo": "fs-components/dropdown-popover",
+  "description": "Component equivalent of frontire ddPopover control. Component to show/hide a UI layer.",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "jamischarles/qwery": "*",
+    "component/event": "*",
+    "fs-components/data-control-parser": "*"
+    },
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}
