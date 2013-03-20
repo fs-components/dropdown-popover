@@ -31,14 +31,14 @@ var preventDef = require('prevent'); //x-browser preventDefault
 
 //instantiate a new popover instance
 function ddPopover(container, config) {
-  var container_node = query(container)[0];
+  var container_node = query(container);
   var context = container_node;
 
   var trigger = config.trigger || ".trigger";
-  var trigger_node = query(trigger, context)[0];
+  var trigger_node = query(trigger, context);
 
   var target = config.target || ".target";
-  var target_node = query(target, context)[0];
+  var target_node = query(target, context);
 
   var toggleClass = config.toggleClass || "visible";
 
@@ -59,7 +59,7 @@ function ddPopover(container, config) {
       //toggleMenu(true, target_node, toggleClass, config.openEvent); //open menu
       
       setTimeout(function(){ 
-        events.bind(query('html')[0], "click", closeMenu); //add global click listener to close menu
+        events.bind(query('html'), "click", closeMenu); //add global click listener to close menu
         events.bind(document, "keyup", closeMenuOnEsc); //add global esc key listener to close menu  
       }, 50);
 
@@ -75,7 +75,7 @@ function ddPopover(container, config) {
   //if a close trigger is passed in, set delegate for it.
   if (closeTrigger) {
     //if there's a close trigger, add listener to close
-    events.bind(query(closeTrigger, context)[0], "click", closeMenu);
+    events.bind(query(closeTrigger, context), "click", closeMenu);
   } 
   
   //close on escape
@@ -94,7 +94,7 @@ function ddPopover(container, config) {
     //   $(el).trigger(eventToFire); 
     // }
 
-    events.unbind(query('html')[0], "click", closeMenu); //remove global close click listener
+    events.unbind(query('html'), "click", closeMenu); //remove global close click listener
     events.unbind(document, "keyup", closeMenuOnEsc); //remove global esc key listener
   }
 
@@ -120,21 +120,17 @@ function ddPopover(container, config) {
 //Convenience methods
 
 //get the html fixture instances on the page
-function getPopoverNodes(query_str) {
-  var popover_query = query_str || "[data-control=ddPopover]";
-  var popovers = query(popover_query);
-  return popovers;
-}
-
 //build only the first item
 function one(query_str) {
-  var popover = getPopoverNodes(query_str).slice(0,1); //only leave the first item
+  var popover_query = query_str || "[data-control=ddPopover]";
+  var popover = query(query_str); //only leave the first item
   buildPopovers(popover);
 }
 
 //build all items found
 function all(query_str) {
-  var popovers = getPopoverNodes(query_str);
+  var popover_query = query_str || "[data-control=ddPopover]";
+  var popovers = query.all(query_str);
   buildPopovers(popovers);
 }
 
