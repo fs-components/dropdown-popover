@@ -123,7 +123,7 @@ function ddPopover(container, config) {
 //build only the first item
 function one(query_str) {
   var popover_query = query_str || "[data-control=ddPopover]";
-  var popover = query(query_str); //only leave the first item
+  var popover = [query(query_str)]; //buildPopovers expevts array
   buildPopovers(popover);
 }
 
