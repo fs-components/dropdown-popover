@@ -5,7 +5,8 @@
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {
-    "jamischarles/qwery": "*",
+    "component/query": "*",
+    "jamischarles/query-qwery": "*",
     "component/event": "*",
     "fs-components/data-control-parser": "*",
     "yields/prevent": "*",

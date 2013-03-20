@@ -20,7 +20,8 @@
 /**
  * Module Deps
  */
-var getEl = require("qwery");
+require('query-qwery'); //use qwery as selector engine for query
+var query = require("query");
 var events = require("event");  
 var parseDataControls = require("data-control-parser");
 var stopProp = require('stop'); //x-browser stopPropogation 
@@ -30,14 +31,14 @@ var preventDef = require('prevent'); //x-browser preventDefault
 
 //instantiate a new popover instance
 function ddPopover(container, config) {
-  var container_node = getEl(container)[0];
+  var container_node = query(container)[0];
   var context = container_node;
 
   var trigger = config.trigger || ".trigger";
-  var trigger_node = getEl(trigger, context)[0];
+  var trigger_node = query(trigger, context)[0];
 
   var target = config.target || ".target";
-  var target_node = getEl(target, context)[0];
+  var target_node = query(target, context)[0];
 
   var toggleClass = config.toggleClass || "visible";
 
@@ -58,7 +59,7 @@ function ddPopover(container, config) {
       //toggleMenu(true, target_node, toggleClass, config.openEvent); //open menu
       
       setTimeout(function(){ 
-        events.bind(getEl('html')[0], "click", closeMenu); //add global click listener to close menu
+        events.bind(query('html')[0], "click", closeMenu); //add global click listener to close menu
         events.bind(document, "keyup", closeMenuOnEsc); //add global esc key listener to close menu  
       }, 50);
 
@@ -74,7 +75,7 @@ function ddPopover(container, config) {
   //if a close trigger is passed in, set delegate for it.
   if (closeTrigger) {
     //if there's a close trigger, add listener to close
-    events.bind(getEl(closeTrigger, context)[0], "click", closeMenu);
+    events.bind(query(closeTrigger, context)[0], "click", closeMenu);
   } 
   
   //close on escape
@@ -93,7 +94,7 @@ function ddPopover(container, config) {
     //   $(el).trigger(eventToFire); 
     // }
 
-    events.unbind(getEl('html')[0], "click", closeMenu); //remove global close click listener
+    events.unbind(query('html')[0], "click", closeMenu); //remove global close click listener
     events.unbind(document, "keyup", closeMenuOnEsc); //remove global esc key listener
   }
 
@@ -119,21 +120,21 @@ function ddPopover(container, config) {
 //Convenience methods
 
 //get the html fixture instances on the page
-function getPopoverNodes(query) {
-  var popover_query = query || "[data-control=ddPopover]";
-  var popovers = getEl(popover_query);
+function getPopoverNodes(query_str) {
+  var popover_query = query_str || "[data-control=ddPopover]";
+  var popovers = query(popover_query);
   return popovers;
 }
 
 //build only the first item
-function one(query) {
-  var popover = getPopoverNodes(query).slice(0,1); //only leave the first item
+function one(query_str) {
+  var popover = getPopoverNodes(query_str).slice(0,1); //only leave the first item
   buildPopovers(popover);
 }
 
 //build all items found
-function all(query) {
-  var popovers = getPopoverNodes(query);
+function all(query_str) {
+  var popovers = getPopoverNodes(query_str);
   buildPopovers(popovers);
 }
 
