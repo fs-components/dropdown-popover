@@ -10,7 +10,9 @@
     "component/event": "*",
     "fs-components/data-control-parser": "*",
     "yields/prevent": "*",
-    "yields/stop": "*"
+    "yields/stop": "*",
+    "jamischarles/custom-evt-manager": "*"
+    
   },
   "development": {},
   "license": "MIT",

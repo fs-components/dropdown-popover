@@ -2,14 +2,54 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+
+  <style>
+    .visible {display: block;}
+
+    .target {display: none;}
+    .target.visible {display: block;}
+  </style>
+
 </head>
 <body>
   
+
+  <div id="someElement" data-control="ddPopover" data-config='{"trigger": ".main_trigger", "target": ".target", "unique_id": "Sign-in-dropdown"}'>
+    <p><a class="main_trigger" href="javascript:;">Trigger</a></p>
+
+    <div class="target" style="height: 300px; background-color: #eee;">hidden dropdown menu</div>
+  </div>
+
+
   <script src="build/build.js"></script>
   <script>
-    var dd = require("dropdown-popover")
-    var prevent = require("yields-prevent");
-    var stop = require("yields-stop");
+    
+
+    //instantiate dd_popover
+    require("dropdown-popover").one("[data-control=ddPopover]");
+
+    
+
+    // test mediator cross-module custom events
+    var Mediator = require("jamischarles-custom-evt-manager");
+
+    
+    function testMsg(msg0, msg1) {
+      console.log(msg0 + " | " + msg1 )
+      console.log(this); //context that was passed in
+    }
+
+
+
+    var mediator = new Mediator()
+
+    //mediator.subscribe( "chat", testMsg )
+    //mediator.subscribe( "chat::message", testMsg )
+
+    // 'chat' and 'chat::message' will fire because of namespacing
+    //mediator.subscribe( "ddPopover", testMsg )
+    mediator.subscribe( "ddPopover::Sign-in-dropdown", testMsg, document.getElementById("someElement"))
+
   </script>
 </body>
 </html>

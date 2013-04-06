@@ -26,11 +26,21 @@ var events = require("event");
 var parseDataControls = require("data-control-parser");
 var stopProp = require('stop'); //x-browser stopPropogation 
 var preventDef = require('prevent'); //x-browser preventDefault 
+var GlobalMediator = require('custom-evt-manager'); //used to fire global custom events, that can be heard from other components.
 
-//TODO: pull in yields/stop, yields/prevent (for x-browser both of those)
+
 
 //instantiate a new popover instance
 function ddPopover(container, config) {
+  var mediator = new GlobalMediator();
+
+  //custom event stuff
+  var unique_id = config.unique_id || false; //used to scope the custom event this fires properly. If not passed, no custom event will fire.
+  var COMP_EVT_NAME = "ddPopover";
+  var CLOSE_EVT = "hide";
+  var OPEN_EVT = "show";
+
+
   var container_node = query(container);
   var context = container_node;
 
@@ -99,18 +109,32 @@ function ddPopover(container, config) {
   }
 
   function hideMenu(el, className) {
+    
     el.className = el.className.replace(className, ""); //remove className
 
+    
+    //fire custom event (if unique name is passed) (which can be heard across modules / components)
+    if (unique_id) {
+      var evt_namespace = COMP_EVT_NAME + "::" + unique_id + "::" + CLOSE_EVT;
+      //console.log (evt_namespace);
+      //fire event, and pass the evt name as argument.
+      mediator.publish( evt_namespace, evt_namespace ); //pass which instance is closed, opened...
+      //mediator.publish( "chat::message", "shaggy1187", "CLOSE" );  
+    }
+    
   }
 
   function showMenu(el, className) {
     el.className += " " + className; //add className
 
-    //if open event defined, fire it
-    //FIXME: How are we going to fire the custom events without jquery? Is that possible?
-    // if (eventToFire) {
-    //   $(el).trigger(eventToFire); 
-    // }
+    //fire custom event (if unique name is passed) (which can be heard across modules / components)
+    if (unique_id) {
+      var evt_namespace = COMP_EVT_NAME + "::" + unique_id + "::" + OPEN_EVT;
+      //fire event, and pass the evt name as argument.
+      mediator.publish( evt_namespace, evt_namespace ); //pass which instance is closed, opened...
+     
+    }
+
   }
 
   
