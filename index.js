@@ -175,7 +175,8 @@ function buildPopovers(popovers) {
 module.exports = {
   all: all, //fetch all instance from the page. Build all instances that match the query.
   one: one //build one popover instance. Build the first instance found
-}
+};
+
 
 // module.exports = function() {
 
