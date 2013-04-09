@@ -37,8 +37,8 @@ function ddPopover(container, config) {
   //custom event stuff
   var unique_id = config.unique_id || false; //used to scope the custom event this fires properly. If not passed, no custom event will fire.
   var COMP_EVT_NAME = "ddPopover";
-  var CLOSE_EVT = "hide";
-  var OPEN_EVT = "show";
+  var CLOSE_EVT = "close";
+  var OPEN_EVT = "open";
 
 
   var container_node = query(container);
